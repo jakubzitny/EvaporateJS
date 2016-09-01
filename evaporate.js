@@ -479,6 +479,7 @@
             }
 
             function removePartFromProcessing(part) {
+                console.log('dd removing part from processing', part)
                 removeAtIndex(partsInProcess, part.part);
                 evaporatingCnt(-1);
             }
@@ -1035,10 +1036,12 @@
             function makeParts() {
 
                 numParts = Math.ceil(me.file.size / con.partSize) || 1; // issue #58
+                console.log('dd numParts: ', me.file.size, '/', con.partSize, '==', numParts)
                 for (var part = 1; part <= numParts; part++) {
                     var status = (typeof s3Parts[part] === 'undefined') ? PENDING : s3Parts[part].status;
 
                     if (status !== COMPLETE) {
+                        console.log('dd making part', part)
                         s3Parts[part] = makePart(part, PENDING, me.file.size);
                         partsToUpload.push(part);
                     }
@@ -1144,6 +1147,7 @@
                 }
                 for (var i = 0; i < partsToUpload.length; i++) {
                     var part = s3Parts[partsToUpload[i]];
+                    console.log('dd processing part', i, part)
                     if (con.computeContentMd5 && part.md5_digest === null) {
 
                         return; // MD5 Digest isn't ready yet
@@ -1174,6 +1178,7 @@
                         if (evaporatingCount < con.maxConcurrentParts) {
                             uploadPart(part.part);
                         } else {
+                          console.log('dd podozrivo..')
                             return; // We might as well stop iterating because we're out of concurrent part slots
                         }
                     }
