@@ -917,7 +917,8 @@
                 var abort = {
                     method: 'DELETE',
                     path: getPath() + '?uploadId=' + me.uploadId,
-                    step: 'abort'
+                    step: 'abort',
+                    x_amz_headers: me.xAmzHeadersAtCancel
                 };
 
                 abort.onErr = function () {
