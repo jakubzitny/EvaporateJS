@@ -347,7 +347,9 @@
                 xAmzHeadersAtInitiate: {},
                 notSignedHeadersAtInitiate: {},
                 xAmzHeadersAtUpload: {},
-                xAmzHeadersAtComplete: {}
+                xAmzHeadersAtComplete: {},
+                xAmzHeadersAtCancel: {},
+                xAmzHeadersAtGet: {}
             }, file, {
                 id: id,
                 status: PENDING,
@@ -941,7 +943,8 @@
                 var list = {
                     method: 'GET',
                     path: getPath() + '?uploadId=' + me.uploadId,
-                    step: 'list'
+                    step: 'list',
+                    x_amz_headers: me.xAmzHeadersAtGet
                 };
 
                 list.onErr = function (xhr) {
@@ -988,7 +991,8 @@
                     method: 'GET',
                     path: getPath() + '?uploadId=' + me.uploadId,
                     query_string: "&part-number-marker=" + partNumberMarker,
-                    step: 'get upload parts'
+                    step: 'get upload parts',
+                    x_amz_headers: me.xAmzHeadersAtGet
                 };
 
                 if (con.awsSignatureVersion === '4') {
