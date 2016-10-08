@@ -89,6 +89,7 @@
             testUnsupported: false,
             simulateStalling: false,
             simulateErrors: false,
+            streamSupport: false,
             evaporateChanged: function () {}
         }, config);
 
@@ -690,6 +691,16 @@
                 };
 
                 upload.toSend = function () {
+                    if (con.streamSupport && me.file.path) {
+                      var readStream = fs.createReadStream(me.file.path, { start: part.start, end: part.end });
+                      chunks = []
+                      readStream.on('data', function(chunk) {
+                        chunks.push(chunk)
+                      })
+                      var chunksBuffer = Buffer.concat(chunks)
+                      return new Blob(chunksBuffer)
+                    }
+
                     var slice = getFilePart(me.file, part.start, part.end);
                     l.d('part #', partNumber, '( bytes', part.start, '->', part.end, ')  reported length:', slice.size);
                     if (!part.isEmpty && slice.size === 0) { // issue #58
